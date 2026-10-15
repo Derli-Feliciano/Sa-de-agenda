@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SaúdeAgenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loading">Carregando...</div>
+
+<!-- Toast -->
+<div id="toast" class="toast" style="display:none">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" style="color:var(--sage);flex-shrink:0"><path d="M20 6L9 17l-5-5"/></svg>
+  <span class="toast-msg"></span>
+</div>
+
+<!-- ========== LOGIN ========== -->
+<div id="screen-login" class="login-wrap">
+  <div class="login-deco" aria-hidden="true">
+    <svg style="left:6%;top:28%;width:280px;height:280px;position:absolute" viewBox="0 0 200 200" fill="none">
+      <path d="M100 175s-60-35-60-95c0-25 18-40 38-40 14 0 22 8 22 8s8-8 22-8c20 0 38 15 38 40 0 60-60 95-60 95z" stroke="rgba(255,255,255,0.22)" stroke-width="2" fill="none"/>
+      <path d="M40 100h20l8-15 12 30 8-18h14l8-12 6 12h44" stroke="rgba(255,255,255,0.30)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <svg style="right:0;top:30%;width:60%;height:200px;position:absolute" viewBox="0 0 600 200" preserveAspectRatio="none">
+      <path d="M0 100 C 150 30, 350 170, 600 80" stroke="rgba(255,255,255,0.18)" stroke-width="2" fill="none"/>
+    </svg>
+    <svg style="right:7%;top:12%;width:36px;height:36px;position:absolute" viewBox="0 0 24 24" fill="rgba(255,255,255,0.30)"><path d="M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8z"/></svg>
+    <svg style="right:12%;top:50%;width:28px;height:28px;position:absolute" viewBox="0 0 24 24" fill="rgba(255,255,255,0.25)"><path d="M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8z"/></svg>
+    <svg style="left:14%;bottom:12%;width:30px;height:30px;position:absolute" viewBox="0 0 24 24" fill="rgba(255,255,255,0.28)"><path d="M10 2h4v8h8v4h-8v8h-4v-8H2v-4h8z"/></svg>
+    <svg style="left:4%;top:20%;width:14px;height:14px;position:absolute" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="rgba(255,255,255,0.30)"/></svg>
+    <svg style="left:18%;top:52%;width:22px;height:22px;position:absolute" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="rgba(255,255,255,0.20)"/></svg>
+  </div>
+
+  <div class="login-card-wrap">
+    <form class="login-card-new" id="form-login">
+      <div class="login-logo">
+        <div style="margin-bottom:14px">
+          <img src="assets/logo-meu-odontologia.png" alt="Meu Odontologia" style="max-width:260px;width:100%;height:auto;object-fit:contain;display:block">
+        </div>
+        <div class="login-wordmark">Saúde<span class="accent">Agenda</span></div>
+        <div class="login-tagline">Sua saúde organizada, sempre.</div>
+      </div>
+
+      <div class="login-divider"></div>
+
+      <div class="login-greeting">
+        <h2>Bem-vindo de volta!</h2>
+        <p>Faça login para acessar sua conta</p>
+      </div>
+
+      <div id="login-error" class="login-error" style="display:none"></div>
+
+      <div class="login-input">
+        <svg class="lead-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <input type="text" id="login-user" placeholder="Usuário" value="admin" autocomplete="username">
+      </div>
+
+      <div class="login-input">
+        <svg class="lead-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <input type="password" id="login-pass" placeholder="Senha" autocomplete="current-password">
+        <button type="button" id="toggle-pwd" class="trail-btn" aria-label="Mostrar senha">
+          <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+
+      <button type="submit" class="login-submit" id="btn-login">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Entrar
+      </button>
+    </form>
+
+    <div class="login-foot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
+      Seus dados estão protegidos
+    </div>
+  </div>
+</div>
+
+<!-- ========== APP SHELL ========== -->
+<div id="screen-app" class="app" style="display:none">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand-row">
+      <div class="glyph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/></svg>
+      </div>
+      <div class="brand-name">SaúdeAgenda</div>
+    </div>
+
+    <div class="nav-section">Navegação</div>
+    <button class="nav-item" data-page="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z"/></svg>
+      Agenda
+    </button>
+    <button class="nav-item" data-page="novo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Novo Agendamento
+    </button>
+    <button class="nav-item" data-page="paciente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Cadastrar Paciente
+    </button>
+
+    <div class="nav-section">Recursos</div>
+    <button class="nav-item" data-page="profissionais">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a4 4 0 0 0 8 0V3M10 13v3a4 4 0 0 0 8 0v-2"/><circle cx="18" cy="11" r="2"/></svg>
+      Profissionais
+    </button>
+    <button class="nav-item" data-page="pacientes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Pacientes
+    </button>
+
+    <div class="sidebar-footer">
+      <div class="avatar" id="sidebar-avatar">AD</div>
+      <div class="who">
+        <div id="sidebar-username">Administrador</div>
+      </div>
+      <button class="icon-btn" id="btn-logout" title="Sair">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- ===== PAGE: AGENDA ===== -->
+    <div id="page-home" class="page">
+      <div class="page-head">
+        <div>
+          <div class="crumb">Painel · Agenda</div>
+          <h1>Agenda do Dia</h1>
+          <div class="sub" id="home-sub">Carregando...</div>
+        </div>
+        <div class="head-actions">
+          <button class="btn btn-ghost" id="btn-refresh">
+            <svg id="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5"/></svg>
+            Atualizar
+          </button>
+          <button class="btn btn-ghost" data-page="paciente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 5v14M5 12h14"/></svg>
+            Paciente
+          </button>
+          <button class="btn btn-primary" data-page="novo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 5v14M5 12h14"/></svg>
+            Novo Agendamento
+          </button>
+        </div>
+      </div>
+
+      <div class="stats-grid" id="stats-grid"></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <h2>Consultas</h2>
+            <div class="tabs">
+              <button class="tab active" id="tab-dia">Agenda do Dia</button>
+              <button class="tab" id="tab-geral">Geral</button>
+            </div>
+          </div>
+        </div>
+        <table class="appts" id="appts-table" style="display:table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Paciente</th>
+              <th>Médico</th>
+              <th>Status</th>
+              <th style="width:100px">Ação</th>
+            </tr>
+          </thead>
+          <tbody id="appts-tbody"></tbody>
+        </table>
+        <div id="appts-empty" class="empty" style="display:none">Nenhum agendamento encontrado.</div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: NOVO AGENDAMENTO ===== -->
+    <div id="page-novo" class="page" style="display:none">
+      <div class="page-head">
+        <div>
+          <div class="crumb">Agenda · Novo</div>
+          <h1>Novo Agendamento</h1>
+          <div class="sub">Crie uma nova consulta selecionando paciente, profissional e horário disponível.</div>
+        </div>
+        <div class="head-actions">
+          <button class="btn btn-ghost" data-page="home">Cancelar</button>
+        </div>
+      </div>
+
+      <form id="form-novo" class="form-layout">
+        <div class="form-card">
+          <div class="form-section">
+            <div class="sec-title">01 · Paciente</div>
+            <div class="field">
+              <label>Selecione o paciente</label>
+              <select class="select" id="novo-paciente">
+                <option value="">Selecione um paciente…</option>
+              </select>
+              <div class="field-error" id="err-paciente" style="display:none"></div>
+              <div class="field-hint">Paciente novo? <a href="#" id="link-cad-paciente" style="color:var(--primary)">Cadastrar paciente</a></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="sec-title">02 · Profissional</div>
+            <div class="field">
+              <label>Selecione o profissional</label>
+              <select class="select" id="novo-medico">
+                <option value="">Selecione um profissional…</option>
+              </select>
+              <div class="field-error" id="err-medico" style="display:none"></div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <div class="sec-title">03 · Data e horário</div>
+            <div class="field">
+              <label>Data da consulta</label>
+              <input type="date" class="input" id="novo-data">
+              <div class="field-error" id="err-data" style="display:none"></div>
+            </div>
+            <div class="field" style="margin-top:4px">
+              <label>Horário disponível</label>
+              <div class="time-grid" id="time-grid"></div>
+              <div class="field-error" id="err-hora" style="display:none"></div>
+              <div class="field-hint" style="margin-top:10px">Horários riscados estão ocupados na agenda do profissional.</div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" data-page="home">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Agendar Consulta
+            </button>
+          </div>
+        </div>
+
+        <!-- Aside: Resumo -->
+        <div>
+          <div class="aside-card">
+            <h3>Resumo do agendamento</h3>
+            <p>Confira os detalhes antes de confirmar.</p>
+            <div style="margin-top:18px;font-size:13px;display:grid;gap:12px" id="novo-resumo"></div>
+          </div>
+          <div class="aside-card" style="margin-top:16px">
+            <h3>Política de agendamento</h3>
+            <ul class="check-list">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="color:var(--sage);flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"/></svg>
+                Cancelamentos com até 24h de antecedência não geram cobrança.
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14" style="color:var(--sage);flex-shrink:0;margin-top:2px"><path d="M20 6L9 17l-5-5"/></svg>
+                Tolerância de 15 min após o horário marcado.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- ===== PAGE: CADASTRAR PACIENTE ===== -->
+    <div id="page-paciente" class="page" style="display:none">
+      <div class="page-head">
+        <div>
+          <div class="crumb">Pacientes · Novo</div>
+          <h1>Cadastrar Paciente</h1>
+          <div class="sub">Adicione um novo paciente ao sistema. Os campos marcados com * são obrigatórios.</div>
+        </div>
+        <div class="head-actions">
+          <button class="btn btn-ghost" data-page="home">Cancelar</button>
+        </div>
+      </div>
+
+      <form id="form-paciente" class="form-layout">
+        <div class="form-card">
+          <div class="form-section">
+            <div class="sec-title">Identificação</div>
+            <div class="field">
+              <label>Nome completo *</label>
+              <input class="input" id="pac-nome" placeholder="Ex.: Ana Carolina Silva">
+              <div class="field-error" id="err-pac-nome" style="display:none"></div>
+            </div>
+            <div class="form-row cols-2">
+              <div class="field">
+                <label>CPF *</label>
+                <input class="input" id="pac-cpf" placeholder="000.000.000-00" maxlength="14">
+                <div class="field-error" id="err-pac-cpf" style="display:none"></div>
+              </div>
+              <div class="field">
+                <label>Data de nascimento *</label>
+                <input class="input" id="pac-nasc" placeholder="DD/MM/AAAA" maxlength="10">
+                <div class="field-error" id="err-pac-nasc" style="display:none"></div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Telefone *</label>
+              <input class="input" id="pac-tel" placeholder="(11) 90000-0000" maxlength="15">
+              <div class="field-error" id="err-pac-tel" style="display:none"></div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" data-page="home">Cancelar</button>
+            <button type="submit" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M20 6L9 17l-5-5"/></svg>
+              Salvar Paciente
+            </button>
+          </div>
+        </div>
+
+        <!-- Aside: Completude -->
+        <div>
+          <div class="aside-card">
+            <h3>Cadastro</h3>
+            <p>Preencha os dados do paciente para concluir o cadastro.</p>
+            <div style="margin-top:16px">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+                <span style="color:var(--ink-soft)">Completude</span>
+                <span style="font-family:'JetBrains Mono',monospace;color:var(--primary);font-weight:500" id="completude-pct">0%</span>
+              </div>
+              <div style="height:6px;background:var(--line-2);border-radius:3px;overflow:hidden">
+                <div id="completude-bar" style="height:100%;width:0%;background:var(--primary);transition:width .3s"></div>
+              </div>
+            </div>
+            <ul class="check-list" style="margin-top:18px" id="check-list-paciente"></ul>
+          </div>
+          <div class="aside-card" style="margin-top:16px">
+            <h3>LGPD</h3>
+            <p>Os dados informados serão usados exclusivamente para fins assistenciais e administrativos da clínica, conforme política de privacidade.</p>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- ===== PAGE: PROFISSIONAIS ===== -->
+    <div id="page-profissionais" class="page" style="display:none">
+      <div class="page-head">
+        <div>
+          <div class="crumb">Recursos · Profissionais</div>
+          <h1>Profissionais</h1>
+          <div class="sub" id="prof-sub"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Equipe clínica</h2>
+          <span class="meta" id="prof-meta"></span>
+        </div>
+        <table class="appts">
+          <thead>
+            <tr>
+              <th>Profissional</th>
+              <th>Especialidade</th>
+            </tr>
+          </thead>
+          <tbody id="prof-tbody"></tbody>
+        </table>
+        <div id="prof-empty" class="empty" style="display:none">Nenhum profissional encontrado.</div>
+      </div>
+    </div>
+
+    <!-- ===== PAGE: PACIENTES ===== -->
+    <div id="page-pacientes" class="page" style="display:none">
+      <div class="page-head">
+        <div>
+          <div class="crumb">Recursos · Pacientes</div>
+          <h1>Pacientes</h1>
+          <div class="sub" id="pacs-sub"></div>
+        </div>
+        <div class="head-actions">
+          <button class="btn btn-primary" data-page="paciente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M12 5v14M5 12h14"/></svg>
+            Cadastrar Paciente
+          </button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Lista de pacientes</h2>
+          <span class="meta" id="pacs-meta"></span>
+        </div>
+        <table class="appts">
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>CPF</th>
+            </tr>
+          </thead>
+          <tbody id="pacs-tbody"></tbody>
+        </table>
+        <div id="pacs-empty" class="empty" style="display:none">Nenhum paciente encontrado.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
